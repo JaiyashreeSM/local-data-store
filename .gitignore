@@ -1,3 +1,7 @@
+node_modules/
+DB-store/dev/
+DB-store/test/
+
 # Logs
 logs
 *.log
