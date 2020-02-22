@@ -1,10 +1,15 @@
 var express = require('express');
 var app = express();
-var router = express.Router();
+var bodyParser = require('body-parser')
 
 // require files
 var dataStoreRoute = require('./route/data-store')
 const { handleError } = require('./helper/error')
+
+// parse various input types in req-body
+app.use(bodyParser.urlencoded({ limit: '5mb', extended: true }));
+app.use(bodyParser.json({limit: '5mb'}));
+app.use(bodyParser.raw({limit: '5mb'}) );
 
 app.get('/', function (req, res) {
    res.send('Local Data Store');
@@ -13,7 +18,6 @@ app.get('/', function (req, res) {
 app.use('/api/v1', dataStoreRoute);
 
 app.use((err, req, res, next) => {
-   console.log(res)
    handleError(err, res);
 });
 

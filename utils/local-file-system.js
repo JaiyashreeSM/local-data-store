@@ -1,5 +1,7 @@
 // import required modules
 let fs = require('fs');
+const getSize = require('get-folder-size');
+
 // import local exports
 const constants = require('../utils/constants');
 
@@ -33,8 +35,20 @@ const writeFile = async(filePath, fileData) => {
   });
 }
 
+const removeFile = async(filePath) => {
+  return new Promise((resolve, reject) => {
+    fs.unlink(filePath, (err) => {
+      if (err) {
+        reject(err);
+      }
+      resolve('Done');
+    });
+  });
+}
+
 module.exports = {
   fileExists,
   readFile,
   writeFile,
+  removeFile,
 };
