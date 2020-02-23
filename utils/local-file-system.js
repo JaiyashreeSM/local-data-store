@@ -1,6 +1,5 @@
 // import required modules
 let fs = require('fs');
-const getSize = require('get-folder-size');
 
 // import local exports
 const constants = require('../utils/constants');
@@ -12,7 +11,7 @@ const constants = require('../utils/constants');
  * @author Jaiyashree Subramanian
  */
 const fileExists = async(filePath) => {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     fs.exists(filePath, function(exists) {
       resolve(exists);
     });
@@ -56,7 +55,7 @@ const writeFile = async(filePath, fileData) => {
 /**
  * Wrapper function for to remove a file with path specified
  * 
- * @param {string} filePath - path to read file
+ * @param {string} filePath - path to file to be removed
  * @author Jaiyashree Subramanian
  */
 const removeFile = async(filePath) => {

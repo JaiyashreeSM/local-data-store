@@ -4,13 +4,15 @@
   "description": "",
   "main": "server.js",
   "scripts": {
+    "lint": "eslint .",
     "prestart": "NODE_ENV=dev node setup-data-store.js",
     "start": "NODE_ENV=dev nodemon ./server.js",
     "expire-kv": "NODE_ENV=dev nodemon ./scheduler/expire-kv.js",
     "pretest": "NODE_ENV=test node ./test/setup-test-ds.js",
-    "test": "NODE_ENV=test istanbul cover _mocha $(find -name \"*.spec.js\" -not -path \"./node_modules/*\")"
+    "test": "NODE_ENV=test istanbul cover _mocha $(find -name \"*.spec.js\" -not -path \"./node_modules/*\")",
+    "posttest": "npm run lint"
   },
-  "author": "",
+  "author": "Jaiyashree Subramanian",
   "license": "ISC",
   "dependencies": {
     "app-root-path": "^3.0.0",
@@ -28,6 +30,8 @@
     "winston": "^3.2.1"
   },
   "devDependencies": {
-    "handlebars": "^4.5.0"
+    "eslint": "^6.8.0",
+    "handlebars": "^4.5.0",
+    "jshint": "^2.11.0"
   }
 }

@@ -14,7 +14,7 @@ const ErrorHandler = require('../utils/error');
  */
 const validateKV = async(data, callback) => {
   try {
-    return new Promise(async(resolve, reject) => {
+    return new Promise((resolve, reject) => {
       if(data.key.length !== 32)
         reject(new ErrorHandler(406, 'Key must be 32 characters in length'));
       if(sizeof.sizeof(data.value) > 16384) // value capped to 16KB

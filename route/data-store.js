@@ -1,7 +1,6 @@
 let express = require('express');
 let router = express.Router();
 let DataStore = require('../service/data-store');
-let app = express();
 
 router.use(function(req, res, next) {
   next(); // to make sure the call is returned to next level

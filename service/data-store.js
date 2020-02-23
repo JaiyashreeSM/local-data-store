@@ -162,6 +162,7 @@ module.exports = class DataStoreService {
       });
       return 'Completed a cycle';
     } catch (err) {
+      logger.error(err)
       throw (err);
     }
   }
