@@ -9,11 +9,10 @@ const validateKV = async(data, callback) => {
       if(sizeof.sizeof(data.value) > 16384) // value capped to 16KB
         reject(new ErrorHandler(406, 'Value must not exceed 16KB'));
       if(data.ttl) {
-        const {valueSize, fileContent} = await validateTTL(data, callback); 
-        resolve({valueSize, fileContent});
+        const valueSize = await validateTTL(data, callback); 
+        resolve(valueSize);
       } else { 
-        const valueSize = sizeof.sizeof({value: data.value}); 
-        resolve({valueSize, fileContent: {value: data.value}});
+        resolve(sizeof.sizeof({value: data.value}));
       }
     });
   } catch(error) {
@@ -28,8 +27,9 @@ const validateTTL = (data, callback) => {
         reject(new ErrorHandler(406, 'ttl must be valid number representing number of seconds'));
       }
       let expire = Date.now() + (data.ttl * 1000); // calculate expiry time
+      data.expire = expire;
       let valueSize = sizeof.sizeof({value: data.value, expire}); 
-      resolve({valueSize, fileContent: {value: data.value, expire}});
+      resolve(valueSize);
     });
   } catch(error) {
     callback(new ErrorHandler(error));

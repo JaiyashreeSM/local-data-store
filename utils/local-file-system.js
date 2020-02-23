@@ -46,9 +46,21 @@ const removeFile = async(filePath) => {
   });
 }
 
+const listFiles = async(filePath) => {
+  return new Promise((resolve, reject) => {
+    fs.readdir(filePath, (err, files) => {
+      if (err) {
+        reject(err);
+      }
+      resolve(files);
+    });
+  });
+}
+
 module.exports = {
   fileExists,
   readFile,
   writeFile,
   removeFile,
+  listFiles
 };

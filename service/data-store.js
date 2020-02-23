@@ -2,6 +2,7 @@
 let fs = require('fs');
 const path = require('path');
 const getSize = require('get-folder-size');
+const logger = require('winston');
 
 // import app files
 const constants = require('../utils/constants');
@@ -23,9 +24,10 @@ module.exports = class DataStoreService {
    * 
    * @param {String} fileName - File Name where the data store is set
    */
-  constructor(fileName) {
+  constructor() {
     // super();
     this.filePath = process.env.DATA_STORE_PATH || constants.DEFAULT_FILE_PATH;
+    this.ttlFilePath = path.join(__dirname, `${this.filePath}ttl.json`);
   }
 
   async get(key, callback) {
@@ -36,11 +38,11 @@ module.exports = class DataStoreService {
         return callback(new ErrorHandler(404, 'Key Not Found'));
       }
       let data = JSON.parse(await localFileSystem.readFile(filePath));
-      if(data.expire && data.expire <= Date.now()) { // evaluate ttl
-        await localFileSystem.removeFile(filePath);
+      let isExpired = await this.evaluateTTL(key);
+      if(isExpired) { // evaluate ttl
         return callback(new ErrorHandler(404, 'Key Not Found'));
       }
-      return (data.value);
+      return (data);
     } catch(error) {
       callback(error);
     }
@@ -49,7 +51,7 @@ module.exports = class DataStoreService {
   async set(data, callback) {
     try {
       const filePath = path.join(__dirname, `${this.filePath}${data.key}`);
-      let {valueSize, fileContent} = await validator.validateKV(data);
+      let writeSize = await validator.validateKV(data);
       const isExist = await localFileSystem.fileExists(filePath);
       if(isExist) {
         return callback(new ErrorHandler(406, 'Key Already Exists'));
@@ -60,10 +62,15 @@ module.exports = class DataStoreService {
           resolve(dirSize);
         });
       });
-      if((sizeDS + valueSize) >= 1073741824) { // byte convertion to 1 GB
+      if((sizeDS + writeSize) >= 1073741824) { // byte convertion to 1 GB
         return callback(new ErrorHandler(406, 'No space left on data-store'));
       }
-      await localFileSystem.writeFile(filePath, JSON.stringify(fileContent));
+      await localFileSystem.writeFile(filePath, JSON.stringify(data.value));
+      if(data.ttl) {
+        let ttlData = JSON.parse(await localFileSystem.readFile(this.ttlFilePath));
+        ttlData[data.key] = data.expire;
+        await localFileSystem.writeFile(this.ttlFilePath, JSON.stringify(ttlData));
+      }
       return (data.value);
     } catch(error) {
       callback(new ErrorHandler(error));
@@ -76,17 +83,57 @@ module.exports = class DataStoreService {
       const isExist = await localFileSystem.fileExists(filePath);
       if(!isExist) {
         return callback(new ErrorHandler(404, 'Key Not Found'));
-      } else {
-        const data = JSON.parse(await localFileSystem.readFile(filePath));
-        if(data.expire && data.expire <= Date.now()) { // evaluate ttl
-          await localFileSystem.removeFile(filePath);
-          return callback(new ErrorHandler(404, 'Key Not Found'));
-        }
+      }
+      let isExpired = await this.evaluateTTL(key);
+      if(isExpired) { // evaluate ttl
+        return callback(new ErrorHandler(404, 'Key Not Found'));
       }
       await localFileSystem.removeFile(filePath);
+      let ttlData = JSON.parse(await localFileSystem.readFile(this.ttlFilePath));
+      if(ttlData[key]) { // re-write ttl file
+        delete ttlData[key];
+        await localFileSystem.writeFile(this.ttlFilePath, JSON.stringify(ttlData));
+      }
       return (`Key - ${key} is deleted from data-store`);
     } catch(error) {
       callback(error);
+    }
+  }
+
+  async evaluateTTL(key) {
+    try {
+      let ttlData = JSON.parse(await localFileSystem.readFile(this.ttlFilePath));
+      if(ttlData[key] && ttlData[key] <= Date.now()) { // evaluate ttl
+        await localFileSystem.removeFile(filePath);
+        delete ttlData[key];
+        await localFileSystem.writeFile(this.ttlFilePath, JSON.stringify(ttlData));
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.log(error)
+      logger.error(error);
+    }
+  }
+
+  async removeExpiredKeys() {
+    try {
+      let ttlData = JSON.parse(await localFileSystem.readFile(this.ttlFilePath));
+      Object.keys(ttlData).map(async(item) => {
+        if(ttlData[item] <= Date.now()) {
+          const filePath = path.join(__dirname, `${this.filePath}${item}`);
+          const isExist = await localFileSystem.fileExists(filePath);
+          if(isExist) {
+            await localFileSystem.removeFile(filePath);
+            let updatedTtlData = JSON.parse(await localFileSystem.readFile(this.ttlFilePath));
+            delete updatedTtlData[item];
+            await localFileSystem.writeFile(this.ttlFilePath, JSON.stringify(updatedTtlData));
+          }
+        }
+      })
+    } catch (err) {
+      console.log(err)
+      throw new ErrorHandler(err);
     }
   }
 };
