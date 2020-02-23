@@ -6,8 +6,8 @@ const logger = require('winston');
 
 // import app files
 const constants = require('../utils/constants');
-const ErrorConstants = require('../utils/error');
-const { ErrorHandler } = require('../helper/error');
+const Errors = require('../utils/error');
+const ErrorHandler = require('../utils/error');
 const localFileSystem = require('../utils/local-file-system')
 const validator = require('../utils/validator')
 
@@ -30,31 +30,31 @@ module.exports = class DataStoreService {
     this.ttlFilePath = path.join(__dirname, `${this.filePath}ttl.json`);
   }
 
-  async get(key, callback) {
+  async get(key, next) {
     try {
       const filePath = path.join(__dirname, `${this.filePath}${key}`);
       const isExist = await localFileSystem.fileExists(filePath);
       if(!isExist) {
-        return callback(new ErrorHandler(404, 'Key Not Found'));
+        throw(new ErrorHandler(404, 'Key Not Found'));
       }
       let data = JSON.parse(await localFileSystem.readFile(filePath));
       let isExpired = await this.evaluateTTL(key);
       if(isExpired) { // evaluate ttl
-        return callback(new ErrorHandler(404, 'Key Not Found'));
+        throw(new ErrorHandler(404, 'Key Not Found'));
       }
       return (data);
     } catch(error) {
-      callback(error);
+      next(error);
     }
   }
 
-  async set(data, callback) {
+  async set(data, next) {
     try {
       const filePath = path.join(__dirname, `${this.filePath}${data.key}`);
       let writeSize = await validator.validateKV(data);
       const isExist = await localFileSystem.fileExists(filePath);
       if(isExist) {
-        return callback(new ErrorHandler(406, 'Key Already Exists'));
+        throw (new ErrorHandler(406, 'Key Already Exists'));
       }
       const sizeDS = await new Promise((resolve, reject) => {
         getSize(path.join(__dirname, this.filePath), (err, dirSize) => {
@@ -63,7 +63,7 @@ module.exports = class DataStoreService {
         });
       });
       if((sizeDS + writeSize) >= 1073741824) { // byte convertion to 1 GB
-        return callback(new ErrorHandler(406, 'No space left on data-store'));
+        throw (new ErrorHandler(406, 'No space left on data-store'));
       }
       await localFileSystem.writeFile(filePath, JSON.stringify(data.value));
       if(data.ttl) {
@@ -73,20 +73,20 @@ module.exports = class DataStoreService {
       }
       return (data.value);
     } catch(error) {
-      callback(new ErrorHandler(error));
+      next(error);
     }
   }
 
-  async remove(key, callback) {
+  async remove(key, next) {
     try {
       const filePath = path.join(__dirname, `${this.filePath}${key}`);
       const isExist = await localFileSystem.fileExists(filePath);
       if(!isExist) {
-        return callback(new ErrorHandler(404, 'Key Not Found'));
+        throw (new ErrorHandler(404, 'Key Not Found'));
       }
       let isExpired = await this.evaluateTTL(key);
       if(isExpired) { // evaluate ttl
-        return callback(new ErrorHandler(404, 'Key Not Found'));
+        throw (new ErrorHandler(404, 'Key Not Found'));
       }
       await localFileSystem.removeFile(filePath);
       let ttlData = JSON.parse(await localFileSystem.readFile(this.ttlFilePath));
@@ -96,12 +96,13 @@ module.exports = class DataStoreService {
       }
       return (`Key - ${key} is deleted from data-store`);
     } catch(error) {
-      callback(error);
+      next(error);
     }
   }
 
   async evaluateTTL(key) {
     try {
+      const filePath = path.join(__dirname, `${this.filePath}${key}`);
       let ttlData = JSON.parse(await localFileSystem.readFile(this.ttlFilePath));
       if(ttlData[key] && ttlData[key] <= Date.now()) { // evaluate ttl
         await localFileSystem.removeFile(filePath);
@@ -111,8 +112,8 @@ module.exports = class DataStoreService {
       }
       return false;
     } catch (error) {
-      console.log(error)
       logger.error(error);
+      throw(error);
     }
   }
 
@@ -130,10 +131,10 @@ module.exports = class DataStoreService {
             await localFileSystem.writeFile(this.ttlFilePath, JSON.stringify(updatedTtlData));
           }
         }
-      })
+      });
+      return 'Completed a cycle';
     } catch (err) {
-      console.log(err)
-      throw new ErrorHandler(err);
+      throw (err);
     }
   }
 };

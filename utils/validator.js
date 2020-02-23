@@ -1,5 +1,5 @@
 var sizeof = require('sizeof'); 
-const { ErrorHandler } = require('../helper/error');
+const ErrorHandler = require('../utils/error');
 
 const validateKV = async(data, callback) => {
   try {
@@ -9,34 +9,22 @@ const validateKV = async(data, callback) => {
       if(sizeof.sizeof(data.value) > 16384) // value capped to 16KB
         reject(new ErrorHandler(406, 'Value must not exceed 16KB'));
       if(data.ttl) {
-        const valueSize = await validateTTL(data, callback); 
+        if(typeof data.ttl !== 'number' || data.ttl < 0) { // ttl must be valid positive integer
+          reject(new ErrorHandler(406, 'ttl must be valid number representing number of seconds'));
+        }
+        let expire = Date.now() + (data.ttl * 1000); // calculate expiry time
+        data.expire = expire;
+        let valueSize = sizeof.sizeof({value: data.value, expire}); 
         resolve(valueSize);
       } else { 
         resolve(sizeof.sizeof({value: data.value}));
       }
     });
   } catch(error) {
-    callback(new ErrorHandler(error));
-  } 
-}
-
-const validateTTL = (data, callback) => {
-  try {
-    return new Promise((resolve, reject) => {
-      if(typeof data.ttl !== 'number' || data.ttl < 0) { // ttl must be valid positive integer
-        reject(new ErrorHandler(406, 'ttl must be valid number representing number of seconds'));
-      }
-      let expire = Date.now() + (data.ttl * 1000); // calculate expiry time
-      data.expire = expire;
-      let valueSize = sizeof.sizeof({value: data.value, expire}); 
-      resolve(valueSize);
-    });
-  } catch(error) {
-    callback(new ErrorHandler(error));
+    callback(error);
   } 
 }
 
 module.exports = {
   validateKV,
-  validateTTL
 };
