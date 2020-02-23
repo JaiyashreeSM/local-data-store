@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const logger = require('winston');
 const constants = require('../utils/constants');
-const dsFilePath = path.join(__dirname, constants.DEFAULT_FILE_PATH);
+const dsFilePath = constants.DEFAULT_FILE_PATH;
 
 const clearDS = () => {
   try {

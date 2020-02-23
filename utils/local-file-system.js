@@ -5,6 +5,12 @@ const getSize = require('get-folder-size');
 // import local exports
 const constants = require('../utils/constants');
 
+/**
+ * Wrapper function for checking if a file exist in the file-path
+ * 
+ * @param {string} filePath - path to check if the file exists
+ * @author Jaiyashree Subramanian
+ */
 const fileExists = async(filePath) => {
   return new Promise((resolve, reject) => {
     fs.exists(filePath, function(exists) {
@@ -13,6 +19,12 @@ const fileExists = async(filePath) => {
   });
 }
 
+/**
+ * Wrapper function for reading file from the file-path
+ * 
+ * @param {string} filePath - path to read file
+ * @author Jaiyashree Subramanian
+ */
 const readFile = async(filePath) => {
   return new Promise((resolve, reject) => {
     fs.readFile(filePath, constants.ENCODING, function (err, data) {
@@ -24,6 +36,12 @@ const readFile = async(filePath) => {
   });
 }
 
+/**
+ * Wrapper function for writing file into the file-path
+ * 
+ * @param {string} filePath - path to write the file
+ * @author Jaiyashree Subramanian
+ */
 const writeFile = async(filePath, fileData) => {
   return new Promise((resolve, reject) => {
     fs.writeFile(filePath, fileData, constants.ENCODING, (err) => {
@@ -35,6 +53,12 @@ const writeFile = async(filePath, fileData) => {
   });
 }
 
+/**
+ * Wrapper function for to remove a file with path specified
+ * 
+ * @param {string} filePath - path to read file
+ * @author Jaiyashree Subramanian
+ */
 const removeFile = async(filePath) => {
   return new Promise((resolve, reject) => {
     fs.unlink(filePath, (err) => {

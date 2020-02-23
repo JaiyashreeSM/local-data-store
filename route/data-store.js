@@ -4,13 +4,11 @@ let DataStore = require('../service/data-store');
 let app = express();
 
 router.use(function(req, res, next) {
-  // do logging
-  // console.log('Something is happening.');
-  next(); // make sure we go to the next routes and don't stop here
+  next(); // to make sure the call is returned to next level
 });
 
 /**
- * API to get a document by its key from a collection in data-store
+ * API to get a k-v by its key from a collection in data-store
  */
 router.get('/:key', async(req, res, next) => {
   try {
@@ -23,7 +21,7 @@ router.get('/:key', async(req, res, next) => {
 });
 
 /**
- * API to get a document by its key from a collection in data-store
+ * API to set a k-v into data-store
  */
 router.post('/', async(req, res, next) => {
   try {
@@ -36,7 +34,7 @@ router.post('/', async(req, res, next) => {
 })
 
 /**
- * API to get a document by its key from a collection in data-store
+ * API to delete a value data-store by its key
  */
 router.delete('/:key', async(req, res, next) => {
   try {

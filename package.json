@@ -6,13 +6,14 @@
   "scripts": {
     "prestart": "NODE_ENV=dev node setup-data-store.js",
     "start": "NODE_ENV=dev nodemon ./server.js",
-    "expire-job": "NODE_ENV=dev nodemon ./scheduler/expire-kv.js",
+    "expire-kv": "NODE_ENV=dev nodemon ./scheduler/expire-kv.js",
     "pretest": "NODE_ENV=test node ./test/setup-test-ds.js",
     "test": "NODE_ENV=test istanbul cover _mocha $(find -name \"*.spec.js\" -not -path \"./node_modules/*\")"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "app-root-path": "^3.0.0",
     "body-parser": "^1.19.0",
     "chai": "^4.2.0",
     "cookie-parser": "^1.4.4",

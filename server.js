@@ -1,9 +1,9 @@
 var express = require('express');
-var app = express();
-var bodyParser = require('body-parser')
+const app = express();
+const bodyParser = require('body-parser')
 
 // require files
-var dataStoreRoute = require('./route/data-store')
+const dataStoreRoute = require('./route/data-store')
 const { handleError } = require('./helper/error')
 
 // parse various input types in req-body
