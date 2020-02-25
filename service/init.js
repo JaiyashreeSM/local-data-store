@@ -1,6 +1,6 @@
 const fs = require('fs');
 const logger = require('winston');
-const constants = require('./utils/constants');
+const constants = require('../utils/constants');
 const dsFilePath = process.env.DATA_STORE_PATH || constants.DEFAULT_FILE_PATH
 
 /**
@@ -17,7 +17,6 @@ const createDS = () => {
       fs.writeFileSync(`${dsFilePath}ttl.json`, "{}", constants.ENCODING);
     logger.info('Set data-store successfuly');
   } catch(error) {
-    console.log(error)
     logger.error('Error while setting data-store');
   }
 }

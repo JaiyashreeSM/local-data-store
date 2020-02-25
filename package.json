@@ -5,9 +5,6 @@
   "main": "server.js",
   "scripts": {
     "lint": "eslint .",
-    "prestart": "NODE_ENV=dev node setup-data-store.js",
-    "start": "NODE_ENV=dev nodemon ./server.js",
-    "expire-kv": "NODE_ENV=dev nodemon ./scheduler/expire-kv.js",
     "pretest": "NODE_ENV=test node ./test/setup-test-ds.js",
     "test": "NODE_ENV=test istanbul cover _mocha $(find -name \"*.spec.js\" -not -path \"./node_modules/*\")",
     "posttest": "npm run lint"
@@ -25,13 +22,13 @@
     "istanbul": "^1.0.0-alpha.2",
     "mocha": "^7.0.1",
     "multer": "^1.4.2",
-    "nodemon": "^2.0.2",
-    "sizeof": "^1.0.0",
-    "winston": "^3.2.1"
+    "sizeof": "^1.0.0"
   },
   "devDependencies": {
     "eslint": "^6.8.0",
     "handlebars": "^4.5.0",
-    "jshint": "^2.11.0"
+    "jshint": "^2.11.0",
+    "nodemon": "^2.0.2",
+    "winston": "^3.2.1"
   }
 }
