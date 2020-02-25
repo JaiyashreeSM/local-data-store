@@ -7,6 +7,7 @@ const constants = require('../utils/constants');
 const ErrorHandler = require('../utils/error');
 const localFileSystem = require('../utils/local-file-system')
 const validator = require('../utils/validator')
+require('./init');
 
 /**
  * Class DataStoreService - Create 
