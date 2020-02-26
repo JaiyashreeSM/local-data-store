@@ -5,9 +5,6 @@
   "main": "server.js",
   "scripts": {
     "lint": "eslint .",
-    "prestart": "NODE_ENV=dev node setup-data-store.js",
-    "start": "NODE_ENV=dev nodemon ./server.js",
-    "expire-kv": "NODE_ENV=dev nodemon ./scheduler/expire-kv.js",
     "pretest": "NODE_ENV=test node ./test/setup-test-ds.js",
     "test": "NODE_ENV=test istanbul cover _mocha $(find -name \"*.spec.js\" -not -path \"./node_modules/*\")",
     "posttest": "npm run lint"
