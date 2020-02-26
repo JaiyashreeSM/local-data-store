@@ -8,7 +8,7 @@ const clearDS = () => {
   try {
     if( fs.existsSync(dsFilePath) ) {
       fs.readdirSync(dsFilePath).forEach(function(file, index){
-        var curPath = path.join(__dirname, `${constants.DEFAULT_FILE_PATH}${file}`);
+        var curPath = `${constants.DEFAULT_FILE_PATH}${file}`;
         if(fs.lstatSync(curPath).isDirectory()) { // recurse
           clearDS(curPath);
         } else { // delete file
