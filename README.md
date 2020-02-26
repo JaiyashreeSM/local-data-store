@@ -46,7 +46,11 @@ export DATA_STORE_PATH=/home/workspace/learnings/
 2. value - must be a valid json less than 16KB
 3. ttl (optional) - must be a valid integer representing Time-To-Live in Seconds
 
-## Contributing
+## Example
+1. [Express app with data-store as library](https://github.com/JaiyashreeSM/local-data-store/tree/express-app-example)
+2. [Express app with data-store as service](https://github.com/JaiyashreeSM/local-data-store/tree/service-example)
+
+## Contribution
 This is a beta version trial application and pull requests are welcome.
 
 ## License
