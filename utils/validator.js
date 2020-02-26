@@ -18,12 +18,12 @@ const validateKV = async(data, callback) => {
     return new Promise((resolve, reject) => {
       if(data.key && data.key.length !== 32)
         reject(new ErrorHandler(406, 'Key must be 32 characters in length'));
-      if(regexp.test(data.key))
+      if(!regexp.test(data.key))
         reject(new ErrorHandler(406, 'Key must be alpha-numeric'));
       if(sizeof.sizeof(data.value) > 16384) // value capped to 16KB
         reject(new ErrorHandler(406, 'Value must not exceed 16KB'));
       if(data.ttl) {
-        if(typeof data.ttl !== 'number' || data.ttl < 0 || data.ttl % 1) {
+        if(typeof data.ttl !== 'number' || data.ttl < 0 || (data.ttl % 1 !== 0)) {
           reject(new ErrorHandler(406, 'ttl must be valid number representing number of seconds'));
         }
         let expire = Date.now() + (data.ttl * 1000); // calculate expiry time

@@ -13,7 +13,7 @@
     "posttest": "npm run lint"
   },
   "author": "Jaiyashree Subramanian",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "app-root-path": "^3.0.0",
     "body-parser": "^1.19.0",
@@ -33,5 +33,6 @@
     "eslint": "^6.8.0",
     "handlebars": "^4.5.0",
     "jshint": "^2.11.0"
-  }
+  },
+  "repository": "https://github.com/JaiyashreeSM/local-data-store/tree/service-example"
 }

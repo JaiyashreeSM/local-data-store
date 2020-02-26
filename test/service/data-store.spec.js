@@ -13,7 +13,7 @@ describe('DataStoreService', () => {
       try{
         const dataStore = new DataStore();
         const input = {
-          key: 'set-1234567890123456789012345001',
+          key: 'set_1234567890123456789012345001',
           value : {name: "random-test-json"},
         };
         const result = await dataStore.set(input)
@@ -27,7 +27,7 @@ describe('DataStoreService', () => {
       try{
         const dataStore = new DataStore();
         const input = {
-          key: 'set-1234567890123456789012345002',
+          key: 'set_1234567890123456789012345002',
           value : {name: "random-test-json"},
           ttl: 3600
         };
@@ -42,7 +42,7 @@ describe('DataStoreService', () => {
       try{
         const dataStore = new DataStore();
         const input = {
-          key: 'set-1234',
+          key: 'set_1234',
           value : {name: "random-test-json"}
         };
         dataStore.set(input, (err) => {
@@ -57,7 +57,7 @@ describe('DataStoreService', () => {
       try{
         const dataStore = new DataStore();
         const input = {
-          key: 'set-1234567890123456789012345003',
+          key: 'set_1234567890123456789012345003',
           value : {name: "random-test-json"},
           ttl : -1
         };
@@ -74,7 +74,7 @@ describe('DataStoreService', () => {
       try{
         const dataStore = new DataStore();
         const input = {
-          key: 'set-1234567890123456789012345004',
+          key: 'set_1234567890123456789012345004',
           value: mockJson
         }
         dataStore.set(input, (err) => {
@@ -93,7 +93,7 @@ describe('DataStoreService', () => {
       try{
         const dataStore = new DataStore();
         const input = {
-          key: 'get-1234567890123456789012345001',
+          key: 'get_1234567890123456789012345001',
           value : {name: "random-test-json"}
         };
         await dataStore.set(input);
@@ -108,7 +108,7 @@ describe('DataStoreService', () => {
       try{
         const dataStore = new DataStore();
         const input = {
-          key: 'get-1234567890123456789012345002',
+          key: 'get_1234567890123456789012345002',
           value : {name: "random-test-json"},
           ttl : 1
         };
@@ -127,7 +127,7 @@ describe('DataStoreService', () => {
       try{
         const dataStore = new DataStore();
         const input = {
-          key: 'get-1234567890123456789012345003',
+          key: 'get_1234567890123456789012345003',
           value : {name: "random-test-json"},
         };
         dataStore.get(input.key, (err, result) => {
@@ -146,7 +146,7 @@ describe('DataStoreService', () => {
       try{
         const dataStore = new DataStore();
         const input = {
-          key: 'remove-1234567890123456789012001',
+          key: 'remove_1234567890123456789012001',
           value : {name: "random-test-json"}
         };
         await dataStore.set(input);
@@ -162,7 +162,7 @@ describe('DataStoreService', () => {
       try{
         const dataStore = new DataStore();
         const input = {
-          key: 'remove-1234567890123456789012002',
+          key: 'remove_1234567890123456789012002',
           value : {name: "random-test-json"},
           ttl : 1
         };
@@ -181,7 +181,7 @@ describe('DataStoreService', () => {
       try{
         const dataStore = new DataStore();
         const input = {
-          key: 'remove-1234567890123456789012003',
+          key: 'remove_1234567890123456789012003',
           value : {name: "random-test-json"},
         };
         dataStore.remove(input.key, (err, result) => {
@@ -200,7 +200,7 @@ describe('DataStoreService', () => {
       try{
         const dataStore = new DataStore();
         const input = {
-          key: 'exp-1234567890123456789012456001',
+          key: 'exp_1234567890123456789012456001',
           value : {name: "random-test-json"},
           ttl: 1
         };
