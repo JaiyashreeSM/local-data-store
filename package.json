@@ -1,0 +1,31 @@
+{
+  "name": "data-store-app",
+  "version": "1.0.0",
+  "description": "Express-app to create CRD api using local-data-store as library",
+  "main": "server.js",
+  "scripts": {
+    "start": "NODE_ENV=dev node ./server.js",
+    "expire-kv": "NODE_ENV=dev nodemon --ignore './DB-store/' ./scheduler/expire-kv.js"
+  },
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "chai": "^4.2.0",
+    "cookie-parser": "^1.4.4",
+    "cron": "^1.8.2",
+    "data-store": "github:JaiyashreeSM/local-data-store#master",
+    "express": "^4.17.1",
+    "multer": "^1.4.2",
+    "nodemon": "^2.0.2",
+    "winston": "^3.2.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JaiyashreeSM/local-data-store.git"
+  },
+  "author": "Jaiyashree Subramanian",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/JaiyashreeSM/local-data-store/issues"
+  },
+  "homepage": "https://github.com/JaiyashreeSM/local-data-store#readme"
+}
