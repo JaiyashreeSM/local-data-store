@@ -29,7 +29,7 @@
   },
   "devDependencies": {
     "eslint": "^6.8.0",
-    "handlebars": "^4.5.0",
+    "handlebars": "^4.5.3",
     "jshint": "^2.11.0"
   }
 }
